@@ -63,11 +63,11 @@ export const theme: ThemeUserConfig = {
     // year: `© 2019 - ${new Date().getFullYear()}`,
     links: [
       // Registration link
-      {
-        title: 'Moe ICP 114514',
-        link: 'https://icp.gov.moe/?keyword=114514',
-        style: 'text-sm' // Uno/TW CSS class
-      },
+      // {
+      //   title: 'Moe ICP 114514',
+      //   link: 'https://icp.gov.moe/?keyword=114514',
+      //   style: 'text-sm' // Uno/TW CSS class
+      // },
       // Privacy Policy link
       {
         title: 'Site Policy',
