@@ -1,6 +1,7 @@
 ---
 title: 从零开始的校园网串流指南
 publishDate: 2026-01-16
+description: 平板最有用的一集
 tags:
   - 串流
 language: '中文'
