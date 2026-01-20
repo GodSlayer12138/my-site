@@ -61,14 +61,6 @@ export const theme: ThemeUserConfig = {
     year: `© ${new Date().getFullYear()}`,
     // year: `© 2019 - ${new Date().getFullYear()}`,
     links: [
-      // TODO: 备案？
-      // Registration link
-      // {
-      //   title: 'Moe ICP 114514',
-      //   link: 'https://icp.gov.moe/?keyword=114514',
-      //   style: 'text-sm' // Uno/TW CSS class
-      // },
-      // Privacy Policy link
       {
         title: 'Site Policy',
         link: '/terms/list',
