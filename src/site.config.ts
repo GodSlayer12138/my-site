@@ -121,7 +121,7 @@ export const integ: IntegrationUserConfig = {
   quote: {
     // - Hitokoto
     // https://developer.hitokoto.cn/sentence/#%E8%AF%B7%E6%B1%82%E5%9C%B0%E5%9D%80
-    server: 'https://v1.hitokoto.cn/?c=h',
+    server: 'https://v1.hitokoto.cn/?c=h&c=d',
     target: `(data) => (data.hitokoto ? \`\${data.hitokoto} —— 《\${data.from}》\` : 'Error')`
   },
   // [Typography]
