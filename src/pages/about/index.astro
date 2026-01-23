@@ -2,6 +2,7 @@
 import { Button, Collapse, Spoiler, Timeline } from 'astro-pure/user'
 import PageLayout from '@/layouts/CommonPage.astro'
 import Substats from '@/components/about/Substats.astro'
+import EasterEgg from '@/components/about/EasterEgg.astro'
 
 const headings = [
   // { depth: 2, slug: 'tools', text: 'Tools' },
@@ -19,7 +20,7 @@ const headings = [
   </p>
   <p>
     我喜欢电子游戏，骑行，正在入坑摄影... 
-    <!-- <Spoiler>TODO：彩蛋</Spoiler> -->
+    <Spoiler>这是彩蛋吗？怎么有个飞鹰 500kg 的图标？<EasterEgg /></Spoiler>
   </p>
   <Button title='Sponsor Me' class='w-fit' href='/projects#sponsorship' variant='ahead' />
 

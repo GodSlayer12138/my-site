@@ -1,0 +1,604 @@
+---
+import avatarSrc from '@/assets/Eagle_500kg_Bomb_Stratagem_Icon.png'
+
+interface Props {
+  targetUrl?: string
+}
+
+const { targetUrl = 'https://www.bilibili.com/video/BV1Wf421z78K' } = Astro.props
+---
+
+<!-- 
+    AI 写的屎山
+    如果你是找彩蛋来这里的话，答案是：
+    按住左 Ctrl 键，然后依次按下方向键：上 右 下 下 下
+ -->
+
+<span class="easter-egg" data-target-url={targetUrl}>
+  <img src={avatarSrc.src} alt="?" />
+</span>
+
+<style>
+  .easter-egg {
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    vertical-align: middle;
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: default;
+    transition: all 0.2s ease;
+    position: relative;
+    opacity: 0;
+  }
+
+  /* Spoiler 悬停时显示 */
+  :global(.spoiler:hover) .easter-egg {
+    opacity: 1;
+  }
+  /* 倒计时期间强制显示图标 */
+  .easter-egg.countdown-active {
+    opacity: 1 !important;
+  }
+
+  .easter-egg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* Ctrl 按住时的激活状态 - 绿色光晕，不抖动 */
+  .easter-egg.active {
+    box-shadow: 0 0 12px 4px rgba(76, 175, 80, 0.7);
+  }
+
+  /* 方向键抖动动画 */
+  .easter-egg.shake-up {
+    animation: shake-up 0.15s ease-out;
+  }
+  .easter-egg.shake-down {
+    animation: shake-down 0.15s ease-out;
+  }
+  .easter-egg.shake-left {
+    animation: shake-left 0.15s ease-out;
+  }
+  .easter-egg.shake-right {
+    animation: shake-right 0.15s ease-out;
+  }
+
+  @keyframes shake-up {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  @keyframes shake-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+  }
+  @keyframes shake-left {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(-5px); }
+  }
+  @keyframes shake-right {
+    0%, 100% { transform: translateX(0); }
+    50% { transform: translateX(5px); }
+  }
+
+  /* 成功触发时 - 红色光晕 */
+  .easter-egg.success {
+    box-shadow: 0 0 15px 6px rgba(255, 0, 0, 0.8);
+  }
+</style>
+
+<style is:global>
+  /* 激光效果 - 恒定光束 */
+  .easter-egg-laser {
+    position: fixed;
+    width: 2px;
+    background: linear-gradient(to top, #ff0000, #ff4444, #ff6666);
+    box-shadow: 0 0 10px 3px rgba(200, 0, 0, 0.7),
+                0 0 20px 6px rgba(200, 0, 0, 0.5),
+                0 0 35px 10px rgba(200, 0, 0, 0.3);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9998;
+    transform-origin: bottom center;
+    animation: laser-shoot 0.3s ease-out forwards;
+  }
+
+  @keyframes laser-shoot {
+    0% {
+      height: 0;
+      opacity: 1;
+    }
+    100% {
+      height: var(--laser-height);
+      opacity: 1;
+    }
+  }
+
+  /* 倒计时文本框 - 静止 */
+  .easter-egg-countdown {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 3rem;
+    font-weight: bold;
+    color: #ff3333;
+    text-shadow: 0 0 20px rgba(255, 0, 0, 0.8),
+                 0 0 40px rgba(255, 0, 0, 0.5);
+    z-index: 9999;
+    pointer-events: none;
+  }
+
+  /* 爆炸粒子 - 主粒子 */
+  .easter-egg-particle {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    background: radial-gradient(circle, #ffffff, #ffaa00, #ff4400, #ff0000);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 10px 4px rgba(255, 68, 0, 0.9),
+                0 0 20px 8px rgba(255, 68, 0, 0.5);
+    animation: particle-explode 1.2s ease-out forwards;
+  }
+
+  /* 小型次级粒子 */
+  .easter-egg-particle-small {
+    position: fixed;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, #ffffff, #ffcc00);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 8px 3px rgba(255, 200, 0, 0.8);
+    animation: particle-explode-fast 0.8s ease-out forwards;
+  }
+
+  /* 火花粒子 */
+  .easter-egg-spark {
+    position: fixed;
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(to bottom, #ffffff, #ffaa00, transparent);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    box-shadow: 0 0 6px 2px rgba(255, 170, 0, 0.8);
+    transform-origin: center top;
+    animation: spark-fly 1s ease-out forwards;
+  }
+
+  /* 烟雾环 */
+  .easter-egg-smoke-ring {
+    position: fixed;
+    border: 4px solid rgba(255, 100, 0, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9996;
+    box-shadow: 0 0 20px 5px rgba(255, 100, 0, 0.4),
+                inset 0 0 20px 5px rgba(255, 100, 0, 0.3);
+    animation: smoke-ring-expand 1.2s ease-out forwards;
+  }
+
+  @keyframes particle-explode {
+    0% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--tx), var(--ty)) scale(0.2) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes particle-explode-fast {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--tx), var(--ty)) scale(0);
+      opacity: 0;
+    }
+  }
+
+  @keyframes spark-fly {
+    0% {
+      transform: translate(0, 0) rotate(var(--angle)) scaleY(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--tx), var(--ty)) rotate(var(--angle)) scaleY(0.3);
+      opacity: 0;
+    }
+  }
+
+  @keyframes smoke-ring-expand {
+    0% {
+      width: 10px;
+      height: 10px;
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      width: 350px;
+      height: 350px;
+      opacity: 0;
+      transform: translate(calc(-50% + var(--drift-x, 0px)), calc(-50% + var(--drift-y, 0px)));
+    }
+  }
+
+  /* 爆炸闪光 - 多层 */
+  .easter-egg-flash {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,1), rgba(255,255,200,0.8), rgba(255,100,0,0.6), transparent);
+    pointer-events: none;
+    z-index: 9997;
+    animation: flash-expand 0.5s ease-out forwards;
+  }
+
+  .easter-egg-flash-2 {
+    position: fixed;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,50,0,0.8), rgba(255,0,0,0.4), transparent);
+    pointer-events: none;
+    z-index: 9996;
+    animation: flash-expand-2 0.8s ease-out forwards;
+  }
+
+  @keyframes flash-expand {
+    0% {
+      width: 30px;
+      height: 30px;
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      width: 400px;
+      height: 400px;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  @keyframes flash-expand-2 {
+    0% {
+      width: 20px;
+      height: 20px;
+      opacity: 0.8;
+      transform: translate(-50%, -50%);
+    }
+    100% {
+      width: 500px;
+      height: 500px;
+      opacity: 0;
+      transform: translate(-50%, -50%);
+    }
+  }
+</style>
+
+<script>
+  function initEasterEgg() {
+    const easterEgg = document.querySelector('.easter-egg') as HTMLElement | null
+    if (!easterEgg) return
+
+    const el = easterEgg
+    const targetUrl = el.dataset.targetUrl || 'https://www.bilibili.com/video/BV1Wf421z78K'
+    const spoiler = el.closest('.spoiler') as HTMLElement | null
+    
+    // 目标序列：上 右 下 下 下
+    const SECRET_CODE = ['ArrowUp', 'ArrowRight', 'ArrowDown', 'ArrowDown', 'ArrowDown']
+    
+    let isCtrlPressed = false
+    let inputSequence: string[] = []
+    let isTriggered = false
+    let isCountingDown = false
+
+    // 检查鼠标是否在 Spoiler 上
+    function isMouseOverSpoiler(): boolean {
+      if (!spoiler) return false
+      const opacity = window.getComputedStyle(el).opacity
+      return parseFloat(opacity) > 0
+    }
+
+    function resetState() {
+      if (isTriggered || isCountingDown) return // 触发成功或倒计时期间不重置
+      isCtrlPressed = false
+      inputSequence = []
+      el.classList.remove('active')
+    }
+
+    // 鼠标移开 Spoiler 时取消激活
+    function handleMouseLeave() {
+      if (isCountingDown || isTriggered) return // 倒计时期间不取消
+      resetState()
+    }
+
+    // 方向键抖动
+    function triggerDirectionalShake(direction: string) {
+      const shakeClass = `shake-${direction}`
+      el.classList.remove('shake-up', 'shake-down', 'shake-left', 'shake-right')
+      void el.offsetWidth // 强制重绘
+      el.classList.add(shakeClass)
+    }
+
+    // 获取方向名称
+    function getDirection(code: string): string {
+      const map: Record<string, string> = {
+        'ArrowUp': 'up',
+        'ArrowDown': 'down',
+        'ArrowLeft': 'left',
+        'ArrowRight': 'right'
+      }
+      return map[code] || ''
+    }
+
+    // 创建激光效果 - 返回元素以便后续移除
+    function createLaser(): HTMLElement {
+      const rect = el.getBoundingClientRect()
+      const laser = document.createElement('div')
+      laser.className = 'easter-egg-laser'
+      
+      const laserHeight = rect.top + rect.height / 2
+      laser.style.setProperty('--laser-height', `${laserHeight}px`)
+      laser.style.left = `${rect.left + rect.width / 2 - 1}px`
+      laser.style.bottom = `${window.innerHeight - rect.top - rect.height / 2}px`
+      
+      document.body.appendChild(laser)
+      
+      return laser
+    }
+
+    // 创建倒计时文本框
+    function createCountdown(): { element: HTMLElement; message: string } {
+      const messages = [
+        'Here comes the cavalry!',
+        'Eat Liberty!',
+        "Comin' in hot!",
+        'Attack underway.',
+        'Delivering payload.',
+        'Administering Freedom.',
+        'Unleashing Democracy!',
+        "Democracy's on its way!"
+      ]
+      const randomMessage = messages[Math.floor(Math.random() * messages.length)]
+      
+      const countdown = document.createElement('div')
+      countdown.className = 'easter-egg-countdown'
+      countdown.textContent = `${randomMessage} 3`
+      document.body.appendChild(countdown)
+      return { element: countdown, message: randomMessage }
+    }
+
+    // 创建超级爆炸效果
+    function createExplosion() {
+      const rect = el.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+
+      // 创建主闪光
+      const flash = document.createElement('div')
+      flash.className = 'easter-egg-flash'
+      flash.style.left = `${centerX}px`
+      flash.style.top = `${centerY}px`
+      document.body.appendChild(flash)
+      setTimeout(() => flash.remove(), 500)
+
+      // 创建次级闪光
+      const flash2 = document.createElement('div')
+      flash2.className = 'easter-egg-flash-2'
+      flash2.style.left = `${centerX}px`
+      flash2.style.top = `${centerY}px`
+      document.body.appendChild(flash2)
+      setTimeout(() => flash2.remove(), 800)
+
+      // 创建烟雾环 - 10个，同时释放，随机方向
+      const smokeRingCount = 10
+      for (let i = 0; i < smokeRingCount; i++) {
+        const ring = document.createElement('div')
+        ring.className = 'easter-egg-smoke-ring'
+        ring.style.left = `${centerX}px`
+        ring.style.top = `${centerY}px`
+        // 随机漂移方向 - 完整360度
+        const driftAngle = Math.random() * Math.PI * 2
+        const driftDistance = 50 + Math.random() * 150
+        ring.style.setProperty('--drift-x', `${Math.cos(driftAngle) * driftDistance}px`)
+        ring.style.setProperty('--drift-y', `${Math.sin(driftAngle) * driftDistance}px`)
+        // 随机延迟让效果更自然
+        ring.style.animationDelay = `${Math.random() * 0.1}s`
+        document.body.appendChild(ring)
+        setTimeout(() => ring.remove(), 1300)
+      }
+
+      // 创建主粒子 - 大量
+      const particleCount = 40
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div')
+        particle.className = 'easter-egg-particle'
+        
+        const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.3
+        const distance = 150 + Math.random() * 200
+        const tx = Math.cos(angle) * distance
+        const ty = Math.sin(angle) * distance
+        
+        particle.style.setProperty('--tx', `${tx}px`)
+        particle.style.setProperty('--ty', `${ty}px`)
+        particle.style.left = `${centerX - 7}px`
+        particle.style.top = `${centerY - 7}px`
+        particle.style.animationDelay = `${Math.random() * 0.15}s`
+        
+        document.body.appendChild(particle)
+        setTimeout(() => particle.remove(), 1400)
+      }
+
+      // 创建小型次级粒子 - 更多
+      const smallParticleCount = 60
+      for (let i = 0; i < smallParticleCount; i++) {
+        const particle = document.createElement('div')
+        particle.className = 'easter-egg-particle-small'
+        
+        const angle = Math.random() * Math.PI * 2
+        const distance = 100 + Math.random() * 250
+        const tx = Math.cos(angle) * distance
+        const ty = Math.sin(angle) * distance
+        
+        particle.style.setProperty('--tx', `${tx}px`)
+        particle.style.setProperty('--ty', `${ty}px`)
+        particle.style.left = `${centerX - 3}px`
+        particle.style.top = `${centerY - 3}px`
+        particle.style.animationDelay = `${Math.random() * 0.2}s`
+        
+        document.body.appendChild(particle)
+        setTimeout(() => particle.remove(), 1000)
+      }
+
+      // 创建火花
+      const sparkCount = 30
+      for (let i = 0; i < sparkCount; i++) {
+        const spark = document.createElement('div')
+        spark.className = 'easter-egg-spark'
+        
+        const angle = Math.random() * Math.PI * 2
+        const angleDeg = (angle * 180) / Math.PI + 90
+        const distance = 120 + Math.random() * 180
+        const tx = Math.cos(angle) * distance
+        const ty = Math.sin(angle) * distance
+        
+        spark.style.setProperty('--tx', `${tx}px`)
+        spark.style.setProperty('--ty', `${ty}px`)
+        spark.style.setProperty('--angle', `${angleDeg}deg`)
+        spark.style.left = `${centerX - 2}px`
+        spark.style.top = `${centerY - 10}px`
+        spark.style.animationDelay = `${Math.random() * 0.1}s`
+        
+        document.body.appendChild(spark)
+        setTimeout(() => spark.remove(), 1100)
+      }
+    }
+
+    // 触发成功序列
+    async function triggerSuccess() {
+      isTriggered = true
+      isCountingDown = true
+      el.classList.remove('active')
+      el.classList.add('success', 'countdown-active')
+
+      // 1. 发射激光（保持显示）
+      const laser = createLaser()
+
+      // 2. 等待激光效果完成后显示倒计时
+      await new Promise(resolve => setTimeout(resolve, 300))
+      
+      const { element: countdown, message } = createCountdown()
+      
+      // 3. 倒计时 3-2-1
+      for (let i = 3; i >= 1; i--) {
+        countdown.textContent = `${message} ${i}`
+        await new Promise(resolve => setTimeout(resolve, 1000))
+      }
+      
+      countdown.remove()
+
+      // 4. 移除激光并爆炸
+      laser.remove()
+      createExplosion()
+
+      // 5. 等待爆炸完成后跳转
+      await new Promise(resolve => setTimeout(resolve, 1200))
+      
+      window.open(targetUrl, '_blank')
+      
+      // 6. 恢复初始状态
+      el.classList.remove('success', 'countdown-active')
+      isTriggered = false
+      isCountingDown = false
+      isCtrlPressed = false
+      inputSequence = []
+    }
+
+    function checkSequence(): boolean {
+      if (inputSequence.length < SECRET_CODE.length) return false
+      const tail = inputSequence.slice(-SECRET_CODE.length)
+      return tail.every((key, i) => key === SECRET_CODE[i])
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (isTriggered || isCountingDown) return // 正在播放动画或倒计时时忽略输入
+
+      // 检测左 Ctrl 按下
+      if (e.code === 'ControlLeft') {
+        if (!isCtrlPressed && isMouseOverSpoiler()) {
+          // 只有鼠标悬停在 Spoiler 上时才能激活
+          isCtrlPressed = true
+          inputSequence = []
+          el.classList.add('active')
+        }
+        return
+      }
+
+      // 只有在 Ctrl 按住且鼠标悬停时才处理
+      if (!isCtrlPressed || !isMouseOverSpoiler()) return
+
+      // 检查是否是方向键
+      const arrowKeys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']
+      if (arrowKeys.includes(e.code)) {
+        e.preventDefault() // 防止页面滚动
+        inputSequence.push(e.code)
+        
+        // 方向抖动反馈
+        triggerDirectionalShake(getDirection(e.code))
+
+        // 检查序列末尾是否匹配
+        if (checkSequence()) {
+          triggerSuccess()
+        }
+      } else {
+        // 按了其他键，重置
+        resetState()
+      }
+    }
+
+    function handleKeyUp(e: KeyboardEvent) {
+      if (e.code === 'ControlLeft') {
+        resetState()
+      }
+    }
+
+    function handleBlur() {
+      resetState()
+    }
+
+    // 绑定事件
+    document.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('keyup', handleKeyUp)
+    window.addEventListener('blur', handleBlur)
+    if (spoiler) {
+      spoiler.addEventListener('mouseleave', handleMouseLeave)
+    }
+
+    // 清理函数
+    document.addEventListener('astro:before-swap', () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('keyup', handleKeyUp)
+      window.removeEventListener('blur', handleBlur)
+      if (spoiler) {
+        spoiler.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }, { once: true })
+  }
+
+  // 初始化
+  initEasterEgg()
+
+  // Astro View Transitions 支持
+  document.addEventListener('astro:after-swap', initEasterEgg)
+</script>
