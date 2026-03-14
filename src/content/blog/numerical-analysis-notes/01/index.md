@@ -30,14 +30,14 @@ language: '中文'
 
 - 若近似值 $\tilde{x}$ 的误差限小于其某一位的半个单位，该位到 $\tilde{x}$ 的第一位非零数字共有 $n$ 位，则 $\tilde{x}$ 有 $n$ 位有效数字。
 - 设 $\tilde{x}$ 是 $x$ 的一个近似值，将 $\tilde{x}$ 写成规范形式：
-$$
-\tilde{x} = \pm 0.a_1 a_2 \dots a_i \dots \times 10^m
-$$
-其中：$m$ 为整数。$a_i \in \{0, 1, 2, \dots, 9\}$，且 $a_1 \neq 0$。如果有：
-$$
-|x - \tilde{x}| \leq 0.5 \times 10^{m-n}
-$$
-则称 $\tilde{x}$ 为 $x$ 的具有 $n$ 位有效数字的近似值。
+  $$
+  \tilde{x} = \pm 0.a_1 a_2 \dots a_i \dots \times 10^m
+  $$
+  其中：$m$ 为整数。$a_i \in \{0, 1, 2, \dots, 9\}$，且 $a_1 \neq 0$。如果有：
+  $$
+  |x - \tilde{x}| \leq 0.5 \times 10^{m-n}
+  $$
+  则称 $\tilde{x}$ 为 $x$ 的具有 $n$ 位有效数字的近似值。
 - $\tilde{x}$ 的误差限小于其某一位的半个单位，该位到 $\tilde{x}$ 的第一位非零数字共有 $n$ 位，则 $\tilde{x}$ 有 $n$ 位有效数字。
 - 有效数字与相对误差的关系。  
   已知有效数字为 $n$，估计相对误差的公式为：
@@ -53,18 +53,18 @@ $$
 ### 运算误差分析
 
 - 问题：设 $\tilde{x}$ 是自变量 $x$ 的一个近似值，误差界为 $\varepsilon(\tilde{x})$。利用 $f(\tilde{x})$ 近似 $f(x)$ 的误差界为 $\varepsilon(f(\tilde{x}))$，试估计 $\varepsilon(f(\tilde{x}))$
-- 由 Taylor 展开 可知：
-$$
-f(x) - f(\tilde{x}) = f'(\tilde{x})(x - \tilde{x}) + \frac{f''(\xi)}{2!}(x - \tilde{x})^2
-$$
-由此可得绝对误差的估计：
-$$
-|f(x) - f(\tilde{x})| \leq |f'(\tilde{x})\varepsilon(\tilde{x})| + \frac{|f''(\xi)|}{2!}\varepsilon(\tilde{x})^2
-$$
-忽略 $\varepsilon(\tilde{x})$ 的高阶项可得函数的误差为：
-$$
-\varepsilon(f(\tilde{x})) \approx |f'(\tilde{x})| \varepsilon(\tilde{x})
-$$
+- 由 Taylor 展开可知：
+  $$
+  f(x) - f(\tilde{x}) = f'(\tilde{x})(x - \tilde{x}) + \frac{f''(\xi)}{2!}(x - \tilde{x})^2
+  $$
+  由此可得绝对误差的估计：
+  $$
+  |f(x) - f(\tilde{x})| \leq |f'(\tilde{x})\varepsilon(\tilde{x})| + \frac{|f''(\xi)|}{2!}\varepsilon(\tilde{x})^2
+  $$
+  忽略 $\varepsilon(\tilde{x})$ 的高阶项可得函数的误差为：
+  $$
+  \varepsilon(f(\tilde{x})) \approx |f'(\tilde{x})| \varepsilon(\tilde{x})
+  $$
 
 **推论：**
 $n$ 元函数的误差估计对于 $n$ 元函数 $f(x_1, x_2, \dots, x_n)$，$\tilde{x}_1, \tilde{x}_2, \dots, \tilde{x}_n$ 分别是自变量 $x_1, x_2, \dots, x_n$ 的近似值，则有：
