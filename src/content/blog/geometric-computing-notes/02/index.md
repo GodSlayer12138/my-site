@@ -5,7 +5,6 @@ description: 几何计算前沿笔记-02
 tags:
   - 几何计算前沿
 language: '中文'
-draft: true
 ---
 
 ## 数学基础
