@@ -34,6 +34,7 @@ node_modules/
 
 ### Custom ###
 .DS_Store
+CLAUDE.md
 old_blog
 ignore.*
 bunfig.toml
