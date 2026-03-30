@@ -50,8 +50,7 @@ export const theme: ThemeUserConfig = {
     menu: [
       { title: 'Blog', link: '/blog' },
       { title: 'Projects', link: '/projects' },
-      // 先隐藏这个页面
-      // { title: 'Links', link: '/links' },
+      { title: 'Photos', link: '/photos' },
       { title: 'About', link: '/about' }
     ]
   },

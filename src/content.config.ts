@@ -40,4 +40,41 @@ const blog = defineCollection({
     })
 })
 
-export const collections = { blog }
+// Define photos collection
+const photos = defineCollection({
+  loader: glob({ base: './src/content/photos', pattern: '**/*.{md,mdx}' }),
+  schema: ({ image }) =>
+    z.object({
+      // Required
+      title: z.string().max(60),
+      publishDate: z.coerce.date(),
+      // Main photo - high resolution original
+      photo: z.object({
+        src: image(),
+        alt: z.string(),
+        inferSize: z.boolean().optional(),
+        width: z.number().optional(),
+        height: z.number().optional()
+      }),
+      // Optional
+      description: z.string().max(200).optional(),
+      location: z.string().optional(),
+      camera: z.string().optional(),
+      lens: z.string().optional(),
+      settings: z.string().optional(),
+      // Thumbnail for list page
+      thumbnail: z
+        .object({
+          src: image(),
+          inferSize: z.boolean().optional(),
+          width: z.number().optional(),
+          height: z.number().optional()
+        })
+        .optional(),
+      tags: z.array(z.string()).default([]).transform(removeDupsAndLowerCase),
+      draft: z.boolean().default(false),
+      comment: z.boolean().default(true)
+    })
+})
+
+export const collections = { blog, photos }

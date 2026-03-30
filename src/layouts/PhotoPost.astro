@@ -1,0 +1,118 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { Image } from 'astro:assets'
+
+import { MediumZoom } from 'astro-pure/advanced'
+import config from 'virtual:config'
+import PageLayout from '@/layouts/ContentLayout.astro'
+import { Comment } from '@/components/waline'
+
+interface Props {
+  photo: CollectionEntry<'photos'>
+  photos: CollectionEntry<'photos'>[]
+}
+
+const { photo, photos } = Astro.props
+const { data, id } = photo
+const {
+  title,
+  description,
+  photo: photoData,
+  location,
+  camera,
+  lens,
+  settings,
+  publishDate,
+  comment: enableComment,
+  draft: isDraft
+} = data
+
+const primaryColor = 'hsl(var(--primary) / var(--un-text-opacity))'
+const formattedDate = publishDate.toLocaleDateString('zh-CN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+})
+---
+
+<PageLayout
+  meta={{ title, description }}
+  highlightColor={primaryColor}
+  back='/photos'
+>
+  <div class='photo-detail'>
+    <!-- Photo display area -->
+    <div class='photo-container mb-8'>
+      {photoData.inferSize ? (
+        <Image
+          src={photoData.src}
+          alt={photoData.alt}
+          inferSize
+          class='w-full h-auto rounded-lg'
+        />
+      ) : (
+        <Image
+          src={photoData.src}
+          alt={photoData.alt}
+          width={photoData.width}
+          height={photoData.height}
+          class='w-full h-auto rounded-lg'
+        />
+      )}
+    </div>
+
+    <!-- Photo info -->
+    <div class='photo-info mb-8 space-y-4'>
+      <h1 class='text-3xl font-medium'>{title}</h1>
+
+      <div class='flex flex-wrap gap-4 text-sm text-muted-foreground'>
+        <span>{formattedDate}</span>
+        {location && <span>📍 {location}</span>}
+      </div>
+
+      {description && <p class='text-lg text-muted-foreground leading-relaxed'>{description}</p>}
+
+      <!-- EXIF info -->
+      {(camera || lens || settings) && (
+        <div class='exif-info flex flex-wrap gap-4 text-sm p-4 bg-muted/50 rounded-lg'>
+          {camera && (
+            <div class='flex items-center gap-1'>
+              <span class='text-muted-foreground'>相机:</span>
+              <span>{camera}</span>
+            </div>
+          )}
+          {lens && (
+            <div class='flex items-center gap-1'>
+              <span class='text-muted-foreground'>镜头:</span>
+              <span>{lens}</span>
+            </div>
+          )}
+          {settings && (
+            <div class='flex items-center gap-1'>
+              <span class='text-muted-foreground'>参数:</span>
+              <span>{settings}</span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+
+    <!-- Additional content from markdown -->
+    <div class='prose-content'>
+      <slot />
+    </div>
+  </div>
+
+  <Fragment slot='bottom'>
+    {!isDraft && enableComment && <Comment class='mt-3 sm:mt-6' />}
+  </Fragment>
+</PageLayout>
+
+{config.integ.mediumZoom.enable && <MediumZoom />}
+
+<style>
+  .photo-container img {
+    max-height: 85vh;
+    object-fit: contain;
+  }
+</style>

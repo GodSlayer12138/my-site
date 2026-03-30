@@ -1,0 +1,188 @@
+---
+import type { GetStaticPaths, Page } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from 'astro:content'
+import { Image } from 'astro:assets'
+import PageLayout from '@/layouts/BaseLayout.astro'
+
+export const prerender = true
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const photos = await getCollection('photos', ({ data }) => !data.draft)
+  return paginate(
+    photos.sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()),
+    { pageSize: 12 }
+  )
+}) satisfies GetStaticPaths
+
+interface Props {
+  page: Page<CollectionEntry<'photos'>>
+}
+
+const { page } = Astro.props
+---
+
+<PageLayout meta={{ title: 'Photos' }} highlightColor='#E891B0'>
+  <main class='flex w-full flex-col items-center'>
+    <section class='animate mb-10 flex flex-col items-center gap-y-4' id='content-header'>
+      <h1 class='text-4xl font-medium'>摄影作品</h1>
+      <p class='text-muted-foreground'>记录生活中的美好瞬间</p>
+    </section>
+
+    <div id='content' class='animate w-full md:w-4/5 lg:w-5/6'>
+      <!-- Photo grid -->
+      <div class='photo-grid'>
+        {
+          page.data.map((photo) => (
+            <a href={`/photos/${photo.id}`} class='photo-card group'>
+              <div class='photo-image-wrapper'>
+                {photo.data.thumbnail?.inferSize ? (
+                  <Image
+                    src={photo.data.thumbnail.src}
+                    alt={photo.data.photo.alt}
+                    inferSize
+                    class='photo-image'
+                  />
+                ) : photo.data.thumbnail?.width && photo.data.thumbnail?.height ? (
+                  <Image
+                    src={photo.data.thumbnail.src}
+                    alt={photo.data.photo.alt}
+                    width={photo.data.thumbnail.width}
+                    height={photo.data.thumbnail.height}
+                    class='photo-image'
+                  />
+                ) : (
+                  <Image
+                    src={photo.data.thumbnail?.src || photo.data.photo.src}
+                    alt={photo.data.photo.alt}
+                    width={400}
+                    height={300}
+                    class='photo-image'
+                  />
+                )}
+              </div>
+              <div class='photo-overlay'>
+                <h3 class='photo-title'>{photo.data.title}</h3>
+                {photo.data.location && <span class='photo-location'>📍 {photo.data.location}</span>}
+              </div>
+            </a>
+          ))
+        }
+      </div>
+
+      <!-- Pagination -->
+      {
+        (page.url.prev || page.url.next) && (
+          <div class='mt-10 flex items-center justify-between'>
+            {page.url.prev ? (
+              <a href={page.url.prev} class='pagination-link'>← 上一页</a>
+            ) : (
+              <div />
+            )}
+            <span class='text-sm text-muted-foreground'>
+              第 {page.currentPage} / {page.lastPage} 页
+            </span>
+            {page.url.next ? (
+              <a href={page.url.next} class='pagination-link'>下一页 →</a>
+            ) : (
+              <div />
+            )}
+          </div>
+        )
+      }
+    </div>
+  </main>
+</PageLayout>
+
+<style>
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+  }
+
+  .photo-card {
+    position: relative;
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    border-radius: var(--radius);
+    transition: transform 0.2s ease;
+  }
+
+  .photo-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .photo-image-wrapper {
+    width: 100%;
+    height: 100%;
+  }
+
+  .photo-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .photo-card:hover .photo-image {
+    transform: scale(1.05);
+  }
+
+  .photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1.5rem 1rem 1rem;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+    color: white;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .photo-card:hover .photo-overlay {
+    opacity: 1;
+  }
+
+  .photo-title {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+
+  .photo-location {
+    font-size: 0.75rem;
+    opacity: 0.9;
+  }
+
+  .pagination-link {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--muted));
+    transition: background-color 0.2s ease;
+  }
+
+  .pagination-link:hover {
+    background-color: hsl(var(--muted-foreground) / 0.2);
+  }
+
+  @media (max-width: 640px) {
+    .photo-grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 0.5rem;
+    }
+
+    .photo-overlay {
+      opacity: 1;
+      padding: 1rem 0.5rem 0.5rem;
+      background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+    }
+
+    .photo-title {
+      font-size: 0.875rem;
+    }
+  }
+</style>
