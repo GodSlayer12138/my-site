@@ -5,6 +5,7 @@ description: 数值分析笔记-01
 tags:
   - 数值分析
 language: '中文'
+draft: true
 ---
 
 ## 误差

@@ -5,6 +5,7 @@ description: 数值分析笔记-03
 tags:
   - 数值分析
 language: '中文'
+draft: true
 ---
 
 ## Hermite 插值多项式
